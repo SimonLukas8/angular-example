@@ -1,5 +1,6 @@
 import base64
 import json
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -25,10 +26,23 @@ class User(BaseModel):
             .replace("\\n", "")
 
 
-class ToDo(BaseModel):
+class PartialTodo(BaseModel):
+    heading: Optional[str]
+    content: Optional[str]
+
+
+class PostTodo(BaseModel):
     heading: str
     content: str
-    user: str
+
+
+class ToDo(PostTodo):
+    time: float
+    user_id: int
+
+
+class ReturnTodo(ToDo):
+    id: int
 
 
 class Login(BaseModel):

@@ -15,5 +15,5 @@ if not os.path.isfile(full_path):
 
 db = TinyDB(full_path)
 
-USER_TABLE = db.table("user")
-TODO_TABLE = db.table("todo")
+USER_TABLE = db.table("user", cache_size=0)
+TODO_TABLE = db.table("todo", cache_size=0)
