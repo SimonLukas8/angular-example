@@ -2,7 +2,7 @@
 name = "todo-api"
 version = "0.1.0"
 description = ""
-authors = ["HuiiBuh <nhaderer1@gmail.com>"]
+authors = ["HuiiBuh"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
