@@ -1,0 +1,12 @@
+{
+  "user": {
+    "1": {
+      "username": "default",
+      "token": "eyJ1c2VybmFtZSI6ICJkZWZhdWx0IiwgInBhc3N3b3JkIjogIjEyMzQifQ==\n"
+    },
+    "2": {
+      "username": "defaultt",
+      "token": "eyJ1c2VybmFtZSI6ICJkZWZhdWx0dCIsICJwYXNzd29yZCI6ICIxMjM0In0=\n"
+    }
+  }
+}
