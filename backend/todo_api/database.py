@@ -13,7 +13,7 @@ if not os.path.isdir(path.absolute()):
 if not os.path.isfile(full_path):
     open(full_path, 'a').close()
 
-db = TinyDB(f"{path.absolute()}/database.json")
+db = TinyDB(full_path)
 
 USER_TABLE = db.table("user")
 TODO_TABLE = db.table("todo")
