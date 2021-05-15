@@ -18,7 +18,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
                 request = Request(request.scope, request.receive, request._send)
 
-        is_authorized, error = AuthenticationMiddleware._check_header(request)
+        is_authorized, error = AuthenticationMiddleware._validate_header(request)
 
         if not is_authorized and not AuthenticationMiddleware._is_login_url(request):
             return error
@@ -26,7 +26,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         return await call_next(request)
 
     @staticmethod
-    def _check_header(request: Request) -> (bool, Optional[Response]):
+    def _validate_header(request: Request) -> (bool, Optional[Response]):
         auth = request.headers.get("authorization")
         if not auth:
             return False, AuthenticationMiddleware._auth_error("No auth header was found")
@@ -41,6 +41,10 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
             return False, AuthenticationMiddleware._auth_error("`username` or `password field not in header`")
 
         user = get_user_from_db(auth_header["username"])
+
+        if not user:
+            return False, AuthenticationMiddleware._auth_error("User token has no associated user")
+
         if not user.password_valid(auth_header["password"]):
             return False, AuthenticationMiddleware._auth_error("Token invalid")
 

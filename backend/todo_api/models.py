@@ -4,7 +4,6 @@ import json
 from pydantic import BaseModel
 
 
-
 class User(BaseModel):
     username: str
     token: str
@@ -20,8 +19,10 @@ class User(BaseModel):
             "username": username,
             "password": password
         }
+        token_str = bytes(f"{json.dumps(token_object)}", encoding="UTF_8")
 
-        return str(base64.encodebytes(bytes(f"{json.dumps(token_object)}", encoding="UTF_8")), encoding="UTF_8")
+        return str(base64.encodebytes(token_str), encoding="UTF_8") \
+            .replace("\\n", "")
 
 
 class ToDo(BaseModel):
