@@ -1,6 +1,6 @@
 from typing import Optional
 
-from helpers import decode_user_dict, generate_token, get_user_from_db
+from views.helpers import decode_user_dict, generate_token, get_user_from_db
 from settings import SETTINGS
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request

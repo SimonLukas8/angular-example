@@ -3,7 +3,7 @@ import json
 from typing import Dict, Optional
 
 from database import USER_TABLE
-from models import User
+from todo_api.views.models import User
 from starlette.requests import Request
 from tinydb import Query
 

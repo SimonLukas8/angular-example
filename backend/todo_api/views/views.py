@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from helpers import extract_username, get_user_from_db, crate_user
-from models import Login, User
+from todo_api.views.helpers import extract_username, get_user_from_db, crate_user
+from todo_api.views.models import Login, User
 from starlette.requests import Request
 
 router = APIRouter()

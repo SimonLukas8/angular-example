@@ -1,4 +1,4 @@
-import views
+from views import views
 from fastapi import FastAPI
 from todo_api.middleware import AuthenticationMiddleware
 
