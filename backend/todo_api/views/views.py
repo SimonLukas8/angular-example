@@ -69,9 +69,9 @@ async def get_todos(request: Request, order: OrderBy = None, reverse: bool = Fal
     todo_items = get_todos_from_db(request)
 
     if order:
-        todo_items.sort(key=lambda i: i[order.value], reverse=reverse)
+        todo_items.sort(key=lambda i: getattr(i, order.value), reverse=reverse)
 
-    return [ReturnTodo(**todo, id=todo.doc_id) for todo in todo_items]
+    return todo_items
 
 
 @router.post("/todo")
@@ -80,3 +80,41 @@ async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
     todo = ToDo(**post_todo.dict(), date=time.time(), user_id=user.id)
     todo_id = TODO_TABLE.insert(todo.dict())
     return ReturnTodo(**todo.dict(), id=todo_id)
+
+
+@router.get("/tags")
+async def get_todos(request: Request) -> List[str]:
+    todo_list = get_todos_from_db(request)
+
+    tag_list: List[str] = []
+    for todo in todo_list:
+        for tag in todo.tags:
+            tag_list.append(tag)
+
+    return list(set(tag_list))
+
+
+@router.get("/tags/{tag}")
+async def get_todos(tag: str, request: Request) -> List[ReturnTodo]:
+    todo_list = get_todos_from_db(request)
+
+    return_list: List[ReturnTodo] = []
+
+    for todo in todo_list:
+        if tag in todo.tags:
+            return_list.append(todo)
+
+    return return_list
+
+
+@router.get("/search")
+async def get_todos(q: str, request: Request) -> List[ReturnTodo]:
+    todo_list = get_todos_from_db(request)
+
+    return_list: List[ReturnTodo] = []
+
+    for todo in todo_list:
+        if q.lower() in todo.heading.lower() or q.lower() in todo.content.lower():
+            return_list.append(todo)
+
+    return return_list

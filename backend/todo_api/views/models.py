@@ -3,9 +3,9 @@ from __future__ import annotations
 import base64
 import json
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class User(BaseModel):
@@ -32,11 +32,13 @@ class User(BaseModel):
 class PartialTodo(BaseModel):
     heading: Optional[str]
     content: Optional[str]
+    tags: Optional[List[str]]
 
 
 class PostTodo(BaseModel):
     heading: str
     content: str
+    tags: List[str] = Field(default_factory=list)
 
     def merge_in(self, todo: PartialTodo) -> None:
         if todo.heading:
@@ -44,6 +46,9 @@ class PostTodo(BaseModel):
 
         if todo.content:
             self.content = todo.content
+
+        if todo.tags:
+            self.tags = todo.tags
 
 
 class ToDo(PostTodo):
