@@ -1,11 +1,12 @@
 import time
+from typing import List
 
 from database import TODO_TABLE
 from fastapi import APIRouter, HTTPException
 from starlette.requests import Request
-from tinydb import where
-from todo_api.views.helpers import extract_username, get_user_from_db, crate_user, get_user_from_request, retrieve_todo
-from todo_api.views.models import Login, User, PartialTodo, ReturnTodo, PostTodo, ToDo
+from todo_api.views.helpers import extract_username, get_user_from_db, crate_user, get_user_from_request, retrieve_todo, \
+    get_todos_from_db
+from todo_api.views.models import Login, User, PartialTodo, ReturnTodo, PostTodo, ToDo, OrderBy
 
 router = APIRouter()
 
@@ -63,19 +64,19 @@ async def delete_todo(todo_id: int, request: Request) -> None:
     TODO_TABLE.remove(doc_ids=[todo_id])
 
 
-# TODO order, pagination
 @router.get("/todo")
-async def get_todos(request: Request) -> ReturnTodo:
-    user = get_user_from_request(request)
-    todo_items = TODO_TABLE.search(where("user_id") == user.id)
-    for todo in todo_items:
-        todo["id"] = todo.doc_id
-    return todo_items
+async def get_todos(request: Request, order: OrderBy = None, reverse: bool = False) -> List[ReturnTodo]:
+    todo_items = get_todos_from_db(request)
+
+    if order:
+        todo_items.sort(key=lambda i: i[order.value], reverse=reverse)
+
+    return [ReturnTodo(**todo, id=todo.doc_id) for todo in todo_items]
 
 
 @router.post("/todo")
 async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
     user = get_user_from_request(request)
-    todo = ToDo(**post_todo.dict(), time=time.time(), user_id=user.id)
+    todo = ToDo(**post_todo.dict(), date=time.time(), user_id=user.id)
     todo_id = TODO_TABLE.insert(todo.dict())
     return ReturnTodo(**todo.dict(), id=todo_id)

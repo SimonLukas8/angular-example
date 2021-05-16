@@ -1,11 +1,12 @@
 import base64
 import json
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from database import USER_TABLE, TODO_TABLE
 from fastapi import HTTPException
 from starlette.requests import Request
-from tinydb import Query
+from tinydb import Query, where
+from tinydb.table import Document
 from todo_api.views.models import User, ReturnTodo
 
 
@@ -58,3 +59,8 @@ def retrieve_todo(todo_id: int, request: Request) -> ReturnTodo:
         raise HTTPException(403, "You don't have access to this item")
 
     return ReturnTodo(**todo_db, id=todo_db.doc_id)
+
+
+def get_todos_from_db(request: Request) -> List[Document]:
+    user = get_user_from_request(request)
+    return TODO_TABLE.search(where("user_id") == user.id)

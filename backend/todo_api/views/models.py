@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import json
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
@@ -46,7 +47,7 @@ class PostTodo(BaseModel):
 
 
 class ToDo(PostTodo):
-    time: float
+    date: float
     user_id: int
 
 
@@ -57,3 +58,8 @@ class ReturnTodo(ToDo):
 class Login(BaseModel):
     username: str
     password: str
+
+
+class OrderBy(Enum):
+    date = "date"
+    title = "title"
