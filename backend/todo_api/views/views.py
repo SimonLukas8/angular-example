@@ -1,9 +1,11 @@
+import time
+
 from database import TODO_TABLE
 from fastapi import APIRouter, HTTPException
 from starlette.requests import Request
 from tinydb import where
 from todo_api.views.helpers import extract_username, get_user_from_db, crate_user, get_user_from_request, retrieve_todo
-from todo_api.views.models import Login, User, PartialTodo, ReturnTodo
+from todo_api.views.models import Login, User, PartialTodo, ReturnTodo, PostTodo, ToDo
 
 router = APIRouter()
 
@@ -48,9 +50,11 @@ async def get_todo(todo_id: int, request: Request) -> ReturnTodo:
 @router.patch("/todo/{todo_id}")
 async def update_todo(todo_id: int, partial_todo: PartialTodo, request: Request) -> ReturnTodo:
     todo = retrieve_todo(todo_id, request)
-    new_todo = ReturnTodo(**todo.dict(), **partial_todo.dict())
-    TODO_TABLE.update(doc_ids=[todo_id], **new_todo.dict())
-    return new_todo
+    todo.merge_in(partial_todo)
+    todo_dict = todo.dict()
+    del todo_dict["id"]
+    TODO_TABLE.update(todo_dict, doc_ids=[todo_id])
+    return todo
 
 
 @router.delete("/todo/{todo_id}")
@@ -67,3 +71,11 @@ async def get_todos(request: Request) -> ReturnTodo:
     for todo in todo_items:
         todo["id"] = todo.doc_id
     return todo_items
+
+
+@router.post("/todo")
+async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
+    user = get_user_from_request(request)
+    todo = ToDo(**post_todo.dict(), time=time.time(), user_id=user.id)
+    todo_id = TODO_TABLE.insert(todo.dict())
+    return ReturnTodo(**todo.dict(), id=todo_id)

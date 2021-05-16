@@ -57,4 +57,4 @@ def retrieve_todo(todo_id: int, request: Request) -> ReturnTodo:
     if todo_db["user_id"] != user.id:
         raise HTTPException(403, "You don't have access to this item")
 
-    return ReturnTodo(**todo_db, id=todo_db.doc_ids)
+    return ReturnTodo(**todo_db, id=todo_db.doc_id)

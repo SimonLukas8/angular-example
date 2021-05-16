@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import base64
 import json
 from typing import Optional
@@ -34,6 +36,13 @@ class PartialTodo(BaseModel):
 class PostTodo(BaseModel):
     heading: str
     content: str
+
+    def merge_in(self, todo: PartialTodo) -> None:
+        if todo.heading:
+            self.heading = todo.heading
+
+        if todo.content:
+            self.content = todo.content
 
 
 class ToDo(PostTodo):
