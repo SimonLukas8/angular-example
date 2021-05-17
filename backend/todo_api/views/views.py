@@ -24,14 +24,14 @@ async def login(login_form: Login):
     return user
 
 
-@router.get("/account")
-async def login(request: Request):
+@router.get("/account", response_model=User)
+async def login(request: Request) -> User:
     username = extract_username(request)
 
     return get_user_from_db(username)
 
 
-@router.get("/todo/{todo_id}")
+@router.get("/todo/{todo_id}", response_model=ReturnTodo)
 async def get_todo(todo_id: int, request: Request) -> ReturnTodo:
     todo_db = TODO_TABLE.get(todo_id)
     user = get_user_from_request(request)
@@ -48,7 +48,7 @@ async def get_todo(todo_id: int, request: Request) -> ReturnTodo:
     return todo
 
 
-@router.patch("/todo/{todo_id}")
+@router.patch("/todo/{todo_id}", response_model=ReturnTodo)
 async def update_todo(todo_id: int, partial_todo: PartialTodo, request: Request) -> ReturnTodo:
     todo = retrieve_todo(todo_id, request)
     todo.merge_in(partial_todo)
@@ -64,7 +64,7 @@ async def delete_todo(todo_id: int, request: Request) -> None:
     TODO_TABLE.remove(doc_ids=[todo_id])
 
 
-@router.get("/todo")
+@router.get("/todo", response_model=List[ReturnTodo])
 async def get_todos(request: Request, order: OrderBy = None, reverse: bool = False) -> List[ReturnTodo]:
     todo_items = get_todos_from_db(request)
 
@@ -74,7 +74,7 @@ async def get_todos(request: Request, order: OrderBy = None, reverse: bool = Fal
     return todo_items
 
 
-@router.post("/todo")
+@router.post("/todo", response_model=ReturnTodo)
 async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
     user = get_user_from_request(request)
     todo = ToDo(**post_todo.dict(), date=time.time(), user_id=user.id)
@@ -82,7 +82,7 @@ async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
     return ReturnTodo(**todo.dict(), id=todo_id)
 
 
-@router.get("/tags")
+@router.get("/tags", response_model=List[str])
 async def get_todos(request: Request) -> List[str]:
     todo_list = get_todos_from_db(request)
 
@@ -94,7 +94,7 @@ async def get_todos(request: Request) -> List[str]:
     return list(set(tag_list))
 
 
-@router.get("/tags/{tag}")
+@router.get("/tags/{tag}", response_model=List[ReturnTodo])
 async def get_todos(tag: str, request: Request) -> List[ReturnTodo]:
     todo_list = get_todos_from_db(request)
 
@@ -107,7 +107,7 @@ async def get_todos(tag: str, request: Request) -> List[ReturnTodo]:
     return return_list
 
 
-@router.get("/search")
+@router.get("/search", response_model=List[ReturnTodo])
 async def get_todos(q: str, request: Request) -> List[ReturnTodo]:
     todo_list = get_todos_from_db(request)
 

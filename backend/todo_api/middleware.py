@@ -1,16 +1,16 @@
 from typing import Optional
 
-from views.helpers import decode_user_dict, generate_token, get_user_from_db
 from settings import SETTINGS
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
+from views.helpers import decode_user_dict, generate_token, get_user_from_db
 
 
 class AuthenticationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
 
-        if SETTINGS.spoof_user and not AuthenticationMiddleware._is_login_url(request):
+        if SETTINGS.spoof_user and not AuthenticationMiddleware._is_whitelisted_url(request):
             auth_header = request.headers.get("authorization")
             if not auth_header:
                 token = generate_token("default", "1234")
@@ -20,7 +20,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         is_authorized, error = AuthenticationMiddleware._validate_header(request)
 
-        if not is_authorized and not AuthenticationMiddleware._is_login_url(request):
+        if not is_authorized and not AuthenticationMiddleware._is_whitelisted_url(request):
             return error
 
         return await call_next(request)
@@ -56,5 +56,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         return JSONResponse(response, status_code=403)
 
     @staticmethod
-    def _is_login_url(request: Request) -> bool:
-        return request.url.path == "/login"
+    def _is_whitelisted_url(request: Request) -> bool:
+        return request.url.path == "/login" or \
+               request.url.path == "/docs" or \
+               request.url.path == "/redoc"
