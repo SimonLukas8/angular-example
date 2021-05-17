@@ -83,7 +83,7 @@ async def create_todo(post_todo: PostTodo, request: Request) -> ReturnTodo:
 
 
 @router.get("/tags", response_model=List[str])
-async def get_todos(request: Request) -> List[str]:
+async def get_tags(request: Request) -> List[str]:
     todo_list = get_todos_from_db(request)
 
     tag_list: List[str] = []
@@ -95,7 +95,7 @@ async def get_todos(request: Request) -> List[str]:
 
 
 @router.get("/tags/{tag}", response_model=List[ReturnTodo])
-async def get_todos(tag: str, request: Request) -> List[ReturnTodo]:
+async def get_tag(tag: str, request: Request) -> List[ReturnTodo]:
     todo_list = get_todos_from_db(request)
 
     return_list: List[ReturnTodo] = []
@@ -108,7 +108,7 @@ async def get_todos(tag: str, request: Request) -> List[ReturnTodo]:
 
 
 @router.get("/search", response_model=List[ReturnTodo])
-async def get_todos(q: str, request: Request) -> List[ReturnTodo]:
+async def search(q: str, request: Request) -> List[ReturnTodo]:
     todo_list = get_todos_from_db(request)
 
     return_list: List[ReturnTodo] = []

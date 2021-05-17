@@ -31,14 +31,16 @@ class User(BaseModel):
 
 class PartialTodo(BaseModel):
     heading: Optional[str]
-    content: Optional[str]
+    content: str
     tags: Optional[List[str]]
+    imageUrl: Optional[str]
 
 
 class PostTodo(BaseModel):
     heading: str
     content: str
     tags: List[str] = Field(default_factory=list)
+    imageUrl: Optional[str]
 
     def merge_in(self, todo: PartialTodo) -> None:
         if todo.heading:
@@ -49,6 +51,9 @@ class PostTodo(BaseModel):
 
         if todo.tags:
             self.tags = todo.tags
+
+        if todo.imageUrl:
+            self.imageUrl = todo.imageUrl
 
 
 class ToDo(PostTodo):
