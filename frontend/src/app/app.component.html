@@ -3,11 +3,12 @@
 <div *ngIf="user"> {{user.token}} </div>
 <div *ngIf="todo"> {{todo[1].id}} </div>
 
-<ng-container *ngIf="todo">
-  <div *ngFor="let i of todo">
-    <span>{{i.content}}</span>
-  </div>
-</ng-container>
+
+
+<mat-slider min="1" max="100" step="3" value="1"></mat-slider>
 
 <app-todo-list></app-todo-list>
 <app-todo-list></app-todo-list>
+<mat-slider min="1" max="100" step="1" value="1"></mat-slider>
+<app-todo></app-todo>
+<h3>{{title}}</h3>  <!--Data Binding-->

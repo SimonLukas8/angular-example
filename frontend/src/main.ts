@@ -8,5 +8,6 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic().bootstrapModule(AppModule) //creates a browser platform allowing Angular to be displayed in the Browser
+  // the methods bootstrapModule takes the root component and renders it in the Browser
   .catch(err => console.error(err));
