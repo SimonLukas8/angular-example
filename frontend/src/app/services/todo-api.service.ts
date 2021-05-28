@@ -22,6 +22,11 @@ export class TodoApiService {
   getTodos(): Observable<ToDo[]> {
     return this.http.get<ToDo[]>("http://localhost:8080/todo");
   }
+
+  //postTodos(): Observable<newToDo> {
+    //return this.http.post<newToDo>("http://localhost:8080/todo", );
+  //}
+
 }
 
 

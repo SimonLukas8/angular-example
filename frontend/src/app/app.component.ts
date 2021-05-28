@@ -12,7 +12,7 @@ import {ToDo, UserAccount} from "./models/api-responses";
 export class AppComponent {  // export means that the class can be used by other files
   title = 'todo-list'; //name of the html element that represents the component
   user: UserAccount | undefined; //oder falls es den User Account nicht gibt
-  todo: ToDo[] | undefined;
+
 
   constructor(
     private todoApiService: TodoApiService
@@ -20,9 +20,7 @@ export class AppComponent {  // export means that the class can be used by other
     this.todoApiService.getAccount().subscribe(answer => {
       this.user = answer;
     });
-    this.todoApiService.getTodos().subscribe(answer => {
-      this.todo = answer;
-      console.log(answer);
-    });
+
   }
 }
+

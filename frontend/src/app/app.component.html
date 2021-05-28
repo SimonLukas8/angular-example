@@ -1,14 +1,21 @@
+<app-toolbar></app-toolbar>
 <div *ngIf="user"> {{user.username}} </div>
 <div *ngIf="user"> {{user.id}} </div>
 <div *ngIf="user"> {{user.token}} </div>
-<div *ngIf="todo"> {{todo[1].id}} </div>
+<!-- <div *ngIf="todo"> {{todo[1].id}} </div> -->
 
 
 
 <mat-slider min="1" max="100" step="3" value="1"></mat-slider>
 
 <app-todo-list></app-todo-list>
-<app-todo-list></app-todo-list>
 <mat-slider min="1" max="100" step="1" value="1"></mat-slider>
 <app-todo></app-todo>
 <h3>{{title}}</h3>  <!--Data Binding-->
+
+<app-todo-new-input></app-todo-new-input>
+
+
+
+
+
